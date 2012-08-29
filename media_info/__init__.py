@@ -6,6 +6,8 @@ try:
 except ImportError:
     from urlparse import urlparse
 
+from miss.str import pstrip
+
 
 mirror = lambda a: a
 
@@ -27,7 +29,7 @@ class MediaInfo:
 
     def get(self, url):
         u = urlparse(url) # this doesn't validate the URL and doesn't throw exceptions
-        backend = self.domains.get(u.hostname.lstrip('www.'), None)
+        backend = self.domains.get(pstrip(u.hostname, 'www.'), None)
         if backend is None:
             raise MediaInfoException(self._('Unrecognized domain name: %s') % u.hostname)
         else:
