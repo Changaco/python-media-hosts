@@ -11,5 +11,5 @@ from miss.identity import *
 from miss.namespace import iNS
 from miss.six import ustr
 
-from . import MediaInfoException
+from . import MediaInfoBackend, MediaInfoException, mirror
 from .utils import *
