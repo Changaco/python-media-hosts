@@ -1,6 +1,5 @@
 from __future__ import print_function, unicode_literals
 
-from miss.functools import compose
 from miss.list import singleton
 
 from ..imports import *
@@ -44,21 +43,19 @@ class youtube_backend(MediaInfoBackend):
         if info.get('status', 'ok') != 'ok':
             errors.append(info.get('reason', ustr(info)).replace('\\n', '\n'))
         elif info:
-            info.pop('status', None)
-            info.pop('video_id', None)
-            r.authors = call_pop(singleton, info, 'author')
-            r.duration = call_pop(int, info, 'length_seconds')
-            r.extra_data = info
-            r.published = call_pop(compose(datetime.fromtimestamp, int), info, 'timestamp')
-            r.rating = call_pop(lambda a: dict(average=float(a)), info, 'avg_rating')
-            r.tags = info.pop('keywords', identity).split(',')
-            r.thumbnails = call_pop(lambda url: [{'url': url}], info, 'thumbnail_url')
-            r.title = info.pop('title', identity)
-            r.view_count = call_pop(int, info, 'view_count')
+            info = iNS(info)
+            r.authors = call(singleton, info.author)
+            r.duration = int(info.length_seconds)
+            r.published = call(datetime.fromtimestamp, int(info.timestamp))
+            r.rating = call(lambda a: dict(average=a), float(info.avg_rating))
+            r.tags = info.keywords.split(',')
+            r.thumbnails = call(lambda url: [{'url': url}], info.thumbnail_url)
+            r.title = info.title
+            r.view_count = int(info.view_count)
             # Decode download info
-            d = info.pop('url_encoded_fmt_stream_map', identity).split(',')
+            d = info.url_encoded_fmt_stream_map.split(',')
             d = {a['itag']: a for a in map(urldecode, d)}
-            for fmt in info.pop('fmt_list', identity).split(','):
+            for fmt in info.fmt_list.split(','):
                 itag, resolution, extra_data = fmt.split('/', 2)
                 # TODO figure out what extra_data is
                 d[itag].update(resolution=resolution, extra_data=extra_data)
