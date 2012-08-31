@@ -46,6 +46,7 @@ class MediaInfo:
 
     def get_by_id(self, backend, media_id):
         info = backend.get_info(media_id)
+        info.id = media_id
         info.service = backend.NAME
         return info
 

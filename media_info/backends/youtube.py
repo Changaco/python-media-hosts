@@ -27,7 +27,7 @@ class youtube_backend(MediaInfoBackend):
         return video_id.group(1)
 
     def get_info(self, video_id):
-        r = iNS(id=video_id)
+        r = iNS()
         errors = []
 
         # Try to get info from /get_video_info
