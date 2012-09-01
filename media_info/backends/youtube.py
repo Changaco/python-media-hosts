@@ -1,16 +1,13 @@
 from __future__ import print_function, unicode_literals
 
-from miss.list import singleton
-
 from ..imports import *
 
 try:
     import gdata.youtube.service
-    from dateutil.parser import parse as parse_date
     yt_service = gdata.youtube.service.YouTubeService()
 except ImportError:
     yt_service = None
-    print('Warning: gdata or dateutil not found, some information won\'t be retrieved from Youtube')
+    print('Warning: gdata not found, some information won\'t be retrieved from Youtube')
 
 
 video_id_re = re.compile(r'/(?:watch\?.*v=)?([a-zA-Z0-9_-]{11})')
