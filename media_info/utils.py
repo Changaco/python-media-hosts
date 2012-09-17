@@ -3,12 +3,13 @@ try:
 except ImportError:
     from urlparse import parse_qsl
 
+from miss.identity import getattrsi
 from miss.six import PY3
 
 
 def text(o, *attrs):
     attrs += ('text',)
-    return getattrs(o, *attrs)
+    return getattrsi(o, *attrs)
 
 
 if PY3:

@@ -7,7 +7,6 @@ try:
     yt_service = gdata.youtube.service.YouTubeService()
 except ImportError:
     yt_service = None
-    print('Warning: gdata not found, some information won\'t be retrieved from Youtube')
 
 
 video_id_re = re.compile(r'/(?:watch\?.*v=)?([a-zA-Z0-9_-]{11})')
@@ -43,7 +42,6 @@ class youtube_backend(MediaInfoBackend):
             errors.append(info.get('reason', ustr(info)).replace('\\n', '\n'))
         elif info:
             info = iNS(info)
-            r.authors = call(singleton, info.author)
             r.duration = int(info.length_seconds)
             r.published = call(datetime.fromtimestamp, int(info.timestamp))
             r.rating = call(lambda a: dict(average=a), float(info.avg_rating))
@@ -65,12 +63,14 @@ class youtube_backend(MediaInfoBackend):
             entry = yt_service.GetYouTubeVideoEntry(video_id=video_id)
         except Exception as e:
             entry = None
-            if yt_service is not None:
+            if yt_service is None:
+                print('Warning: gdata module not found, some information could not be retrieved')
+            else:
                 errors.append(e.message.get('reason', ustr(e)))
         if raw:
             return iNS(get_video_info=info, gdata=entry)
         elif entry:
-            authors = (text(author, 'name') for author in getattr(entry, 'author', []))
+            authors = (text(author, 'uri').split('/')[-1] for author in getattr(entry, 'author', []))
             r.authors = list(filter(None, authors)) or r.authors
             r.description = text(entry, 'content')
             r.duration = call(int, getattrsi(entry, 'media', 'duration', 'seconds'), r.duration)
