@@ -33,9 +33,9 @@ class MediaInfo:
         self.domains = {domain: backend for backend in self.backends
                                         for domain in backend.DOMAINS}
 
-    def get(self, url_str):
+    def get(self, url_str, raw=False):
         url, backend = self.get_backend(url_str)
-        return self.get_by_id(backend, backend.get_id(url))
+        return self.get_by_id(backend, backend.get_id(url), raw)
 
     def get_backend(self, url_str):
         url = urlparse(url_str) # this doesn't validate the URL and doesn't throw exceptions
@@ -44,8 +44,8 @@ class MediaInfo:
         except KeyError:
             raise MediaInfoException(self._('Unrecognized domain name: %s') % url.hostname)
 
-    def get_by_id(self, backend, media_id):
-        info = backend.get_info(media_id)
+    def get_by_id(self, backend, media_id, raw=False):
+        info = backend.get_info(media_id, raw)
         info.id = media_id
         info.service = backend.NAME
         return info

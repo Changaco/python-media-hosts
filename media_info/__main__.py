@@ -23,13 +23,14 @@ p = argparse.ArgumentParser()
 p.add_argument('uri')
 p.add_argument('settings', nargs='*', default=[], help='e.g. SOUNDCLOUD_CLIENT_ID=x')
 p.add_argument('-b', '--backends', nargs='*', default=None)
+p.add_argument('-r', '--raw', default=False, action='store_true')
 args = p.parse_args()
 
 
 settings = dict(s.split('=') for s in args.settings)
 media_info = MediaInfo(backends=args.backends, settings=settings)
 try:
-    info = media_info.get(args.uri)
+    info = media_info.get(args.uri, args.raw)
 except MediaInfoException as e:
     print(e.args[0])
     exit(1)

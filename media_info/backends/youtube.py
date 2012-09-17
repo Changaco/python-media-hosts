@@ -23,7 +23,7 @@ class youtube_backend(MediaInfoBackend):
             raise MediaInfoException(self._('Unrecognized url: %s') % url.geturl())
         return video_id.group(1)
 
-    def get_info(self, video_id):
+    def get_info(self, video_id, raw):
         r = iNS(type='video')
         errors = []
 
@@ -37,7 +37,9 @@ class youtube_backend(MediaInfoBackend):
             info = {}
             errors.append(ustr(e))
             raise
-        if info.get('status', 'ok') != 'ok':
+        if raw:
+            pass
+        elif info.get('status', 'ok') != 'ok':
             errors.append(info.get('reason', ustr(info)).replace('\\n', '\n'))
         elif info:
             info = iNS(info)
@@ -65,7 +67,9 @@ class youtube_backend(MediaInfoBackend):
             entry = None
             if yt_service is not None:
                 errors.append(e.message.get('reason', ustr(e)))
-        if entry:
+        if raw:
+            return iNS(get_video_info=info, gdata=entry)
+        elif entry:
             authors = (text(author, 'name') for author in getattr(entry, 'author', []))
             r.authors = list(filter(None, authors)) or r.authors
             r.description = text(entry, 'content')

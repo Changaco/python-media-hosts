@@ -22,11 +22,13 @@ class soundcloud_backend(MediaInfoBackend):
     def get_id(self, url):
         return url.path[1:]
 
-    def get_info(self, track_id):
+    def get_info(self, track_id, raw):
         if not hasattr(self, 'info_url'):
             raise MediaInfoException(self._('Error: you need to provide a client ID to use the %s backend') % self.NAME)
         r = iNS(type='audio')
         info = iNS(json.loads(urlopen(self.info_url+track_id).read()))
+        if raw:
+            return info
         if info.kind != 'track':
             raise MediaInfoException(self._('%s is a %s, not a track' % (track_id,info.kind)))
         r.alternates = call(lambda url: [{'type':'video','url':url}], info.video_url or identity)
