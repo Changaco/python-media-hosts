@@ -12,17 +12,18 @@ class soundcloud_backend(MediaInfoBackend):
     NAME = 'Soundcloud'
 
     def init(self):
-        if not hasattr(self, 'client_id'):
+        client_id = self.settings.get('SOUNDCLOUD_CLIENT_ID', '')
+        if not client_id:
             return
         self.info_url = 'http://api.soundcloud.com/resolve.json' \
-                      + '?client_id='+self.client_id \
+                      + '?client_id='+client_id \
                       + '&url=http://soundcloud.com/'
 
     def get_id(self, url):
         return url.path[1:]
 
     def get_info(self, track_id):
-        if not hasattr(self, 'client_id'):
+        if not hasattr(self, 'info_url'):
             raise MediaInfoException(self._('Error: you need to provide a client ID to use the %s backend') % self.NAME)
         r = iNS(type='audio')
         info = iNS(json.loads(urlopen(self.info_url+track_id).read()))

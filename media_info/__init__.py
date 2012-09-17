@@ -26,7 +26,7 @@ class MediaInfo:
             try:
                 module = import_module('media_info.backends.'+backend)
                 cls = getattr(module, backend+'_backend')
-                instance = cls(_, settings.get(backend, {}))
+                instance = cls(_, settings)
                 self.backends.append(instance)
             except Exception as e:
                 print(e)
@@ -59,8 +59,8 @@ class MediaInfo:
 class MediaInfoBackend(object):
 
     def __init__(self, _, settings):
-        self.__dict__.update(settings)
         self._ = _
+        self.settings = settings
         self.init()
 
     def init(self):

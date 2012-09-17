@@ -21,17 +21,12 @@ class FakeEncoder(json.JSONEncoder):
 
 p = argparse.ArgumentParser()
 p.add_argument('uri')
-p.add_argument('settings', nargs='?', default='', help='urlencoded settings, e.g. "soundcloud:client_id=foo"')
+p.add_argument('settings', nargs='*', default=[], help='e.g. SOUNDCLOUD_CLIENT_ID=x')
 p.add_argument('-b', '--backends', nargs='*', default=None)
 args = p.parse_args()
 
 
-settings = {}
-for k, v in urldecode(args.settings).items():
-    backend, setting = k.split(':', 1)
-    settings.setdefault(backend, {})
-    settings[backend][setting] = v
-
+settings = dict(s.split('=') for s in args.settings)
 media_info = MediaInfo(backends=args.backends, settings=settings)
 try:
     info = media_info.get(args.uri)
