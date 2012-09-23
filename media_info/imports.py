@@ -13,7 +13,6 @@ except ImportError:
     parse_date = lambda _: identity
 
 from miss.identity import *
-from miss.list import singleton
 from miss.namespace import iNS
 from miss.six import ustr
 

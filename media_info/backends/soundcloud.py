@@ -32,7 +32,7 @@ class soundcloud_backend(MediaInfoBackend):
         if info.kind != 'track':
             raise MediaInfoException(self._('%s is a %s, not a track' % (track_id,info.kind)))
         r.alternates = call(lambda url: [{'type':'video','url':url}], info.video_url or identity)
-        r.authors = call(singleton, info.user['username'])
+        r.authors = call(lambda a: [a], info.user['username'])
         r.artwork_url = info.artwork_url
         r.beats_per_minute = info.bpm or identity
         r.comment_count = info.comment_count
