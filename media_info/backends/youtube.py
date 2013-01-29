@@ -1,4 +1,4 @@
-from __future__ import print_function, unicode_literals
+from __future__ import division, print_function, unicode_literals
 
 from ..imports import *
 
@@ -70,8 +70,11 @@ class youtube_backend(MediaInfoBackend):
         if raw:
             return iNS(get_video_info=info, gdata=entry)
         elif entry:
-            authors = (text(author, 'uri').split('/')[-1] for author in getattr(entry, 'author', []))
-            r.authors = list(filter(None, authors)) or r.authors
+            make_author = safe(lambda a:
+                {'name': author.name.text,
+                 'urlname': author.uri.text.split('/')[-1]}
+            )
+            r.authors = list(filter(None, map(make_author, getattr(entry, 'author', [])))) or r.authors
             r.description = text(entry, 'content')
             r.duration = call(int, getattrsi(entry, 'media', 'duration', 'seconds'), r.duration)
             r.favorite_count = call(int, getattrsi(entry, 'statistics', 'favorite_count'))

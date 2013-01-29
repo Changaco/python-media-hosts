@@ -32,14 +32,15 @@ class soundcloud_backend(MediaInfoBackend):
         if info.kind != 'track':
             raise MediaInfoException(self._('%s is a %s, not a track' % (track_id,info.kind)))
         r.alternates = call(lambda url: [{'type':'video','url':url}], info.video_url or identity)
-        r.authors = call(lambda a: [a], info.user['username'])
-        r.artwork_url = info.artwork_url
+        make_author = safe(lambda u: {'name':u['username'], 'urlname':u['permalink']})
+        r.authors = call(lambda a: [a], make_author(info.user or {}))
+        r.artworks = call(lambda url: [{'url':url}], info.artwork_url)
         r.beats_per_minute = info.bpm or identity
         r.comment_count = info.comment_count
         r.description = info.description
         r.duration = info.duration / 1000
         r.favorite_count = info.favoritings_count
-        r.genre = info.genre or identity
+        r.genres = call(lambda a: [a], info.genre or identity)
         r.license = info.license
         r.published = call(parse_date, info.created_at)
         r.purchase_url = info.purchase_url or identity
@@ -51,6 +52,5 @@ class soundcloud_backend(MediaInfoBackend):
         r.downloads = list(filter(None, [info.download_url, info.stream_url]))
         return r
 
-    def normalize(self, url):
-        p = url.path
-        return ('http://soundcloud.com'+p, p)
+    def normalize(self, track_id):
+        return 'http://soundcloud.com/'+track_id
