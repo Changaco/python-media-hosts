@@ -1,3 +1,11 @@
+# This file is part of a program licensed under the terms of the GNU Lesser
+# General Public License version 3 (or at your option any later version)
+# as published by the Free Software Foundation.
+#
+# If you have not received a copy of the GNU Lesser General Public License
+# along with this file, see <http://www.gnu.org/licenses/>.
+
+
 from __future__ import division, print_function, unicode_literals
 
 import json
@@ -6,7 +14,7 @@ import shlex
 from ..imports import *
 
 
-class soundcloud_backend(MediaInfoBackend):
+class soundcloud_backend(MediaHost):
 
     DOMAINS = ('soundcloud.com',)
     NAME = 'Soundcloud'
@@ -24,13 +32,13 @@ class soundcloud_backend(MediaInfoBackend):
 
     def get_info(self, track_id, raw):
         if not hasattr(self, 'info_url'):
-            raise MediaInfoException(self._('Error: you need to provide a client ID to use the %s backend') % self.NAME)
+            raise MediaHostException(self._('Error: you need to provide a client ID to use the %s backend') % self.NAME)
         r = iNS(type='audio')
         info = iNS(json.loads(urlopen(self.info_url+track_id).read()))
         if raw:
             return info
         if info.kind != 'track':
-            raise MediaInfoException(self._('%s is a %s, not a track' % (track_id,info.kind)))
+            raise MediaHostException(self._('%s is a %s, not a track' % (track_id,info.kind)))
         r.alternates = call(lambda url: [{'type':'video','url':url}], info.video_url or identity)
         make_author = safe(lambda u: {'name':u['username'], 'urlname':u['permalink']})
         r.authors = call(lambda a: [a], make_author(info.user or {}))

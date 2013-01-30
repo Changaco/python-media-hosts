@@ -1,3 +1,11 @@
+# This file is part of a program licensed under the terms of the GNU Lesser
+# General Public License version 3 (or at your option any later version)
+# as published by the Free Software Foundation.
+#
+# If you have not received a copy of the GNU Lesser General Public License
+# along with this file, see <http://www.gnu.org/licenses/>.
+
+
 from __future__ import division, print_function, unicode_literals
 
 from ..imports import *
@@ -11,7 +19,7 @@ except ImportError:
 
 video_id_re = re.compile(r'/(?:watch\?.*v=)?([a-zA-Z0-9_-]{11})')
 
-class youtube_backend(MediaInfoBackend):
+class youtube_backend(MediaHost):
 
     DOMAINS = ('youtube.com', 'youtu.be')
     NAME = 'Youtube'
@@ -19,7 +27,7 @@ class youtube_backend(MediaInfoBackend):
     def get_id(self, url):
         video_id = video_id_re.search(url.path + '?' + url.query)
         if not video_id:
-            raise MediaInfoException(self._('Unrecognized url: %s') % url.geturl())
+            raise MediaHostException(self._('Unrecognized url: %s') % url.geturl())
         return video_id.group(1)
 
     def get_info(self, video_id, raw):
@@ -101,7 +109,7 @@ class youtube_backend(MediaInfoBackend):
                 error = self._('Youtube said:\n"%s"') % max(errors, key=len)
             else:
                 error = self._('unknown reason')
-            raise MediaInfoException(self._('Getting video info failed, %s') % error)
+            raise MediaHostException(self._('Getting video info failed, %s') % error)
 
         return r
 

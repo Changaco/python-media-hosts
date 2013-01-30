@@ -1,3 +1,11 @@
+# This file is part of a program licensed under the terms of the GNU Lesser
+# General Public License version 3 (or at your option any later version)
+# as published by the Free Software Foundation.
+#
+# If you have not received a copy of the GNU Lesser General Public License
+# along with this file, see <http://www.gnu.org/licenses/>.
+
+
 from __future__ import division, print_function, unicode_literals
 
 import json
@@ -7,7 +15,7 @@ from ..imports import *
 
 track_id_re = re.compile(r'/track/[^/]*/([0-9]+)')
 
-class beatport_backend(MediaInfoBackend):
+class beatport_backend(MediaHost):
 
     DOMAINS = ('beatport.com',)
     NAME = 'Beatport'
@@ -15,7 +23,7 @@ class beatport_backend(MediaInfoBackend):
     def get_id(self, url):
         track_id = track_id_re.search(url.path)
         if not track_id:
-            raise MediaInfoException(self._('Unrecognized url: %s') % url.geturl())
+            raise MediaHostException(self._('Unrecognized url: %s') % url.geturl())
         return track_id.group(1)
 
     def get_info(self, track_id, raw):
@@ -26,7 +34,7 @@ class beatport_backend(MediaInfoBackend):
             return info
         t = iNS(info.results.get('track', None))
         if not t:
-            raise MediaInfoException(self._('Failed to retrieve information for track %s' % (track_id)))
+            raise MediaHostException(self._('Failed to retrieve information for track %s' % (track_id)))
         make_author = safe(lambda a: {'name':a['name'], 'urlname':a['slug']})
         r.authors = list(filter(None, map(make_author, t.artists)))
         waveform = t.images.pop('waveform', identity)

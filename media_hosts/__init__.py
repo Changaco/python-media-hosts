@@ -1,3 +1,11 @@
+# This file is part of a program licensed under the terms of the GNU Lesser
+# General Public License version 3 (or at your option any later version)
+# as published by the Free Software Foundation.
+#
+# If you have not received a copy of the GNU Lesser General Public License
+# along with this file, see <http://www.gnu.org/licenses/>.
+
+
 from importlib import import_module
 from os import listdir
 from os.path import dirname
@@ -17,14 +25,14 @@ def list_backends():
                    if a[0] != '_' and a.endswith('.py')]
 
 
-class MediaInfo:
+class MediaHosts:
 
     def __init__(self, backends=None, _=mirror, settings={}):
         self._ = _
         self.backends = []
         for backend in (backends or list_backends()):
             try:
-                module = import_module('media_info.backends.'+backend)
+                module = import_module('media_hosts.backends.'+backend)
                 cls = getattr(module, backend+'_backend')
                 instance = cls(_, settings)
                 self.backends.append(instance)
@@ -33,22 +41,22 @@ class MediaInfo:
         self.domains = {domain: backend for backend in self.backends
                                         for domain in backend.DOMAINS}
 
-    def get(self, url_str, raw=False):
-        url, backend = self.get_backend(url_str)
-        return self.get_by_id(backend, backend.get_id(url), raw)
-
     def get_backend(self, url_str):
         url = urlparse(url_str) # this doesn't validate the URL and doesn't throw exceptions
         try:
             return (url, self.domains[pstrip(url.hostname, 'www.')])
         except KeyError:
-            raise MediaInfoException(self._('Unrecognized domain name: %s') % url.hostname)
+            raise MediaHostException(self._('Unrecognized domain name: %s') % url.hostname)
 
-    def get_by_id(self, backend, media_id, raw=False):
+    def get_info_by_id(self, backend, media_id, raw=False):
         info = backend.get_info(media_id, raw)
         info.id = media_id
         info.service = backend.NAME
         return info
+
+    def get_info_by_url(self, url_str, raw=False):
+        url, backend = self.get_backend(url_str)
+        return self.get_info_by_id(backend, backend.get_id(url), raw)
 
     def normalize(self, url_str):
         url, backend = self.get_backend(url_str)
@@ -56,7 +64,7 @@ class MediaInfo:
         return (backend, backend.normalize(i), i)
 
 
-class MediaInfoBackend(object):
+class MediaHost(object):
 
     def __init__(self, _, settings):
         self._ = _
@@ -67,4 +75,4 @@ class MediaInfoBackend(object):
         pass
 
 
-class MediaInfoException(Exception): pass
+class MediaHostException(Exception): pass

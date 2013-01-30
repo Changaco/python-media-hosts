@@ -1,3 +1,11 @@
+# This file is part of a program licensed under the terms of the GNU Lesser
+# General Public License version 3 (or at your option any later version)
+# as published by the Free Software Foundation.
+#
+# If you have not received a copy of the GNU Lesser General Public License
+# along with this file, see <http://www.gnu.org/licenses/>.
+
+
 from __future__ import print_function, unicode_literals
 
 import argparse
@@ -7,7 +15,7 @@ try:
 except ImportError:
     jsonpickle = None
 
-from . import MediaInfo, MediaInfoException
+from . import MediaHosts, MediaHostException
 from .utils import urldecode
 
 
@@ -28,10 +36,10 @@ args = p.parse_args()
 
 
 settings = dict(s.split('=') for s in args.settings)
-media_info = MediaInfo(backends=args.backends, settings=settings)
+media_hosts = MediaHosts(backends=args.backends, settings=settings)
 try:
-    info = media_info.get(args.uri, args.raw)
-except MediaInfoException as e:
+    info = media_hosts.get_info_by_url(args.uri, args.raw)
+except MediaHostException as e:
     print(e.args[0])
     exit(1)
 
