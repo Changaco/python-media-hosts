@@ -40,6 +40,8 @@ class beatport_backend(MediaHost):
         waveform = t.images.pop('waveform', identity)
         r.artworks = list(t.images.values())
         r.beats_per_minute = t.bpm or identity
+        r.clef = t.key.pop('standard')
+        r.clef.update(t.key)
         minutes, seconds = t.length.split(':')
         r.duration = int(minutes)*60 + int(seconds)
         r.genres = list(filter(None, (g.get('name', None) for g in t.genres)))
