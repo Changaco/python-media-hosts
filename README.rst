@@ -1,5 +1,37 @@
 python-media-hosts gets media info from sites like Youtube and Soundcloud.
 
+Which informations does it return ?
+==============================
+
+Depending on the queried hosting service, the returned data can contain the
+following keys:
+
+- ``artworks``
+- ``authors``
+- ``beats_per_minute``
+- ``clef``
+- ``comment_count``
+- ``description``
+- ``downloads``
+- ``duration``
+- ``favorite_count``
+- ``genres``
+- ``license``
+- ``published``
+- ``purchase_url``
+- ``rating``
+- ``recorded``
+- ``tags``
+- ``thumbnails``
+- ``title``
+- ``view_count``
+
+The following keys are always present:
+
+- ``id``
+- ``service``
+- ``type`` (audio or video)
+
 Installation
 ============
 
