@@ -9,7 +9,6 @@ following keys:
 - ``artworks``
 - ``authors``
 - ``beats_per_minute``
-- ``clef``
 - ``comment_count``
 - ``description``
 - ``downloads``
