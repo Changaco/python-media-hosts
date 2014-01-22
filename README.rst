@@ -14,7 +14,6 @@ Dependencies:
 Optional dependencies:
 
 - python-dateutil: to parse dates returned by various APIs
-- gdata: for some Youtube data
 - jsonpickle: for __main__.py
 
 Usage

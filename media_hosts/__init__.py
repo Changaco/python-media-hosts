@@ -36,8 +36,10 @@ class MediaHosts:
                 cls = getattr(module, backend+'_backend')
                 instance = cls(_, settings)
                 self.backends.append(instance)
-            except Exception as e:
-                print(e)
+            except Exception:
+                print('Failed to import "%s" backend:' % backend)
+                import traceback
+                traceback.print_exc()
         self.domains = {domain: backend for backend in self.backends
                                         for domain in backend.DOMAINS}
 

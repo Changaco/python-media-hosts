@@ -17,6 +17,6 @@ setup(
     packages=find_packages(),
     long_description=open(join(dirname(__file__), 'README.rst')).read(),
     install_requires = [
-        'miss>=0.2',
+        'miss>=0.3',
     ],
 )
