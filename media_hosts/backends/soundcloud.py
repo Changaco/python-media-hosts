@@ -41,9 +41,9 @@ class soundcloud_backend(MediaHost):
         r.alternates = call(lambda url: [{'type':'video','url':url}], info.video_url or identity)
         make_author = safe(lambda u: {'name':u['username'], 'urlname':u['permalink']})
         r.authors = call(lambda a: [a], make_author(info.user or {}))
-        r.artworks = call(lambda url: [{'url':url}], info.artwork_url)
         r.beats_per_minute = info.bpm or identity
         r.comment_count = info.comment_count
+        r.coverart_url = info.artwork_url
         r.description = info.description
         r.duration = info.duration / 1000
         r.favorite_count = info.favoritings_count
@@ -52,10 +52,10 @@ class soundcloud_backend(MediaHost):
         r.published = call(parse_date, info.created_at)
         r.purchase_url = info.purchase_url or identity
         r.tags = shlex.split(info.tag_list)
-        r.thumbnails = call(lambda url: [{'url': url}], info.waveform_url)
         r.title = info.title
         r.subtype = info.track_type or identity
         r.view_count = info.playback_count
+        r.waveform_url = info.waveform_url
         r.downloads = list(filter(None, [info.download_url, info.stream_url]))
         return r
 

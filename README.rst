@@ -6,10 +6,10 @@ Which informations does it return ?
 Depending on the queried hosting service, the returned data can contain the
 following keys:
 
-- ``artworks``
 - ``authors``
 - ``beats_per_minute``
 - ``comment_count``
+- ``coverart_url``
 - ``description``
 - ``downloads``
 - ``duration``
@@ -24,6 +24,7 @@ following keys:
 - ``thumbnails``
 - ``title``
 - ``view_count``
+- ``waveform_url``
 
 The following keys are always present:
 
