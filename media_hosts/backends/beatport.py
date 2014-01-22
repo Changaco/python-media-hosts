@@ -8,8 +8,6 @@
 
 from __future__ import division, print_function, unicode_literals
 
-import json
-
 from ..imports import *
 
 
@@ -29,7 +27,7 @@ class beatport_backend(MediaHost):
     def get_info(self, track_id, raw):
         r = iNS(type='audio')
         info_url = 'http://api.beatport.com/catalog/3/beatport/track?id='
-        info = iNS(json.loads(urlopen(info_url+track_id).read()))
+        info = iNS(requests.get(info_url+track_id).json())
         if raw:
             return info
         t = iNS(info.results.get('track', None))

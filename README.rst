@@ -10,6 +10,7 @@ media-hosts is compatible with python 2 and 3.
 Dependencies:
 
 - miss
+- requests
 
 Optional dependencies:
 

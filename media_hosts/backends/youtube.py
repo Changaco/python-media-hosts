@@ -38,7 +38,7 @@ class youtube_backend(MediaHost):
         # Try to get info from /get_video_info
         info_url = 'http://youtube.com/get_video_info?video_id=%s' % video_id
         try:
-            info = urldecode(urlopen(info_url).read())
+            info = urldecode(requests.get(info_url).text)
             if not info:
                 errors.append(self._('Received empty response from %s') % info_url)
         except Exception:
@@ -71,7 +71,7 @@ class youtube_backend(MediaHost):
         # Try to get info from gdata API v2
         url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json' % video_id
         try:
-            entry = urldecode(urlopen(url).read())
+            entry = requests.get(url).json()['entry']
             if not entry:
                 errors.append(self._('Received empty response from %s') % url)
         except Exception:

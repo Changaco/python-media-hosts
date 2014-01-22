@@ -8,7 +8,6 @@
 
 from __future__ import division, print_function, unicode_literals
 
-import json
 import shlex
 
 from ..imports import *
@@ -34,7 +33,7 @@ class soundcloud_backend(MediaHost):
         if not hasattr(self, 'info_url'):
             raise MediaHostException(self._('Error: you need to provide a client ID to use the %s backend') % self.NAME)
         r = iNS(type='audio')
-        info = iNS(json.loads(urlopen(self.info_url+track_id).read()))
+        info = iNS(requests.get(self.info_url+track_id).json())
         if raw:
             return info
         if info.kind != 'track':
