@@ -43,6 +43,6 @@ except MediaHostException as e:
     exit(1)
 
 if jsonpickle:
-    print(json.dumps(json.loads(jsonpickle.encode(info.__dict__)), indent=4))
+    print(json.dumps(json.loads(jsonpickle.encode(info.__dict__)), indent=4, sort_keys=True))
 else:
-    print(json.dumps(info.__dict__, indent=4, cls=FakeEncoder))
+    print(json.dumps(info.__dict__, indent=4, cls=FakeEncoder, sort_keys=True))
