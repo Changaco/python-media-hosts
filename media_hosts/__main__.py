@@ -16,7 +16,6 @@ except ImportError:
     jsonpickle = None
 
 from . import MediaHosts, MediaHostException
-from .utils import urldecode
 
 
 class FakeEncoder(json.JSONEncoder):

@@ -66,7 +66,7 @@ class youtube_backend(MediaHost):
                 d = ds[itag]
                 d.update(resolution=resolution, extra_data=extra_data)
                 d['yt_format'] = d.pop('itag')
-            r.downloads = ds.values()
+            r.downloads = list(ds.values())
 
         # Try to get info from gdata API v2
         url = 'http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json' % video_id
