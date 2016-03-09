@@ -1,5 +1,7 @@
 python-media-hosts gets media info from sites like Youtube and Soundcloud.
 
+**This library is broken and unmaintained, new contributors are welcome.**
+
 Which informations does it return ?
 ==============================
 
